@@ -25,7 +25,7 @@ Given("que eu tenha uma mensagem sem o campo usuário", () => {
 
 When("eu enviar a requisição de cadastro de mensagem", async () => {
   response = await request(app).post("/mensagens").send(requestBody);
-  // console.log("Resposta:", response.body); // Log para depuração
+  console.log("Resposta:", response.body); // Log para depuração
 });
 
 Then("a mensagem deve ser registrada com sucesso", () => {
