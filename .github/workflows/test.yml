@@ -43,13 +43,6 @@ jobs:
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
 
-      - name: Wait for DB to be ready
-        run: |
-          echo "Waiting for PostgreSQL to be ready..."
-          until docker exec app_db pg_isready -U ${{ secrets.DB_USERNAME }}; do
-            sleep 5
-          done
-
       - name: Run Unit Tests
         run: npm run test
 
