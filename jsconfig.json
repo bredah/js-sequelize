@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "baseUrl": "./",
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "src/**/*.js",
+    "test/**/*.js"
+  ],
+  "typeAcquisition": {
+    "include": [
+      "jest"
+    ]
+  }
+}

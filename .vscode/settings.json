@@ -1,0 +1,28 @@
+{
+  "terminal.integrated.automationProfile.osx": {
+    "args": [
+      "-l"
+    ],
+    "path": "/bin/bash"
+  },
+  "jest.virtualFolders": [
+    {
+      "name": "unit-tests",
+      "jest.runMode": "watch",
+      "jest.jestCommandLine": "npm test --",
+    },
+    {
+      "name": "integration-tests",
+      "runMode": "on-demand",
+      "jest.jestCommandLine": "npm run test:integration --",
+    }
+  ],
+  "cucumber.features":[
+    "test/bdd/*.feature",
+    "test/bdd/**/*.feature",
+  ],
+  "cucumberautocomplete.strictGherkinCompletion": true,
+  "cucumberautocomplete.steps": [
+    "test/bdd/steps/*.js"
+  ]
+}

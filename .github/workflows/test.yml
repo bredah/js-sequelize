@@ -1,0 +1,77 @@
+name: Jest
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ${{ secrets.DB_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.DB_NAME }}
+        options: >-
+          --health-cmd="pg_isready -U ${{ secrets.DB_USERNAME }}" 
+          --health-interval=30s 
+          --health-timeout=10s 
+          --health-retries=5 
+          --shm-size=128m
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configurar ambiente
+        uses: actions/setup-node@v1
+        with:
+          node-version: "20.x"
+    
+      - name: Instalar as dependências
+        run: npm install
+
+
+      - name: Set environment variables for tests
+        run: |
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "DB_DIALECT=${{ secrets.DB_DIALECT }}" >> $GITHUB_ENV
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+
+      - name: Wait for DB to be ready
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          until docker exec app_db pg_isready -U ${{ secrets.DB_USERNAME }}; do
+            sleep 5
+          done
+
+      - name: Run Unit Tests
+        run: npm run test
+
+      - name: Run Integration Tests
+        run: npm run test:integration
+
+      - name: Run System Tests
+        run: npm run test:system
+
+      - name: Run BDD Tests
+        run: npm run test:bdd
+
+      - name: Coverage report
+        run: npm run coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: ./coverage
