@@ -60,9 +60,3 @@ jobs:
         with:
           name: coverage-report
           path: ./coverage
-
-      - name: Publish coverage report
-        uses: ArtiomTr/jest-coverage-report-action@v2
-        with:
-          base-coverage-file: ./coverage/report.json
-          skip-step: all
